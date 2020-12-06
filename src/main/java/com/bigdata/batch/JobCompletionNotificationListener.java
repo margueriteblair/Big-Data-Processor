@@ -9,8 +9,8 @@ import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-public class NotificationLogger extends JobExecutionListenerSupport {
-    private static final Logger logger = LoggerFactory.getLogger(NotificationLogger.class
+public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
+    private static final Logger logger = LoggerFactory.getLogger(JobCompletionNotificationListener.class
     );
 
     @Autowired
