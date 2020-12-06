@@ -28,4 +28,21 @@ public class Transaction {
     private BigDecimal newBalanceDestination;
     private boolean isFraud;
     private boolean isFlaggedFraud;
+
+    public Transaction() {}
+
+    public Transaction(Integer step, String type, BigDecimal amount, String nameOrig, BigDecimal oldBalanceOrig, BigDecimal newBalanceOrig, String nameDestination, BigDecimal oldBalanceDestination, BigDecimal newBalanceDestination, boolean isFraud, boolean isFlaggedFraud) {
+        super();
+        this.step = step;
+        this.type = type;
+        this.amount = amount;
+        this.nameOrig = nameOrig;
+        this.oldBalanceOrig = oldBalanceOrig;
+        this.newBalanceOrig = newBalanceOrig;
+        this.nameDestination = nameDestination;
+        this.oldBalanceDestination = oldBalanceDestination;
+        this.newBalanceDestination = newBalanceDestination;
+        this.isFraud = isFraud;
+        this.isFlaggedFraud = isFlaggedFraud;
+    }
 }
