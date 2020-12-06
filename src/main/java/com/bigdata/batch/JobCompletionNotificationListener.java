@@ -20,9 +20,15 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
     private ImportServiceProxy importServiceProxy;
 
     @Override
-    public void afterRun(JobExecution jobExecution) {
+    public void beforeJob(JobExecution jobExecution) {
+        super.beforeJob(jobExecution);
+        logger.info("Job started");
+    }
+
+    @Override
+    public void afterJob(JobExecution jobExecution) {
         if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
-            logger.info("Job is completed. Time to call Reports Service.");
+            logger.info("Job is completed");
 
             String res = importServiceProxy.generateReports();
             logger.info("report service: ", res);
