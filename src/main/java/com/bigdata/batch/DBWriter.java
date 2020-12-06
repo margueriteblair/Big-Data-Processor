@@ -1,5 +1,6 @@
 package com.bigdata.batch;
 
+import com.bigdata.model.Transaction;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
