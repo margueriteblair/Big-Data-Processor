@@ -2,6 +2,7 @@ package com.bigdata.config;
 
 
 import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +18,11 @@ public class BatchJobConfiguration {
 
     @Bean
     public JobLauncher jobLauncher() throws Exception {
+        SimpleJobLauncher jobLauncher = new SimpleJobLauncher();
+        jobLauncher.setJobRepository(jobRepository);
+        jobLauncher.setTaskExecutor(threadPoolTaskExecutor());
 
+        return jobLauncher;
     }
 
     @Bean
