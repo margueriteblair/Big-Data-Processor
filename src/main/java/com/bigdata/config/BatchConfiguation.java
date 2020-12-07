@@ -11,6 +11,7 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 public class BatchConfiguation {
     private static int CHUNK = 5000;
@@ -32,6 +33,16 @@ public class BatchConfiguation {
                 .flow(step)
                 .end()
                 .build();
+    }
+    @Bean
+    public TaskExecutor taskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        int poolSize = 20;
+        executor.setMaxPoolSize(poolSize);
+        executor.setCorePoolSize(poolSize);
+        executor.setQueueCapacity(10);
+        executor.afterPropertiesSet();
+        return executor;
     }
 
 }
