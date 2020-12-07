@@ -76,6 +76,11 @@ public class BatchConfiguation {
         fieldSetMapper.setTargetType(Transaction.class);
         fieldSetMapper.setDistanceLimit(0);
 
+        defaultLineMapper.setLineTokenizer(lineTokenizer);
+        defaultLineMapper.setFieldSetMapper(fieldSetMapper);
+
+        return defaultLineMapper;
+
     }
 
 }
