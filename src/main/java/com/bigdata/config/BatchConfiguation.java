@@ -3,6 +3,12 @@ package com.bigdata.config;
 import com.bigdata.model.Transaction;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.LineMapper;
+import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -43,6 +49,33 @@ public class BatchConfiguation {
         executor.setQueueCapacity(10);
         executor.afterPropertiesSet();
         return executor;
+    }
+
+    @Bean
+    public FlatFileItemReader<Transaction> itemReader() {
+        FlatFileItemReader<Transaction> flatFileItemReader = new FlatFileItemReader<>();
+        flatFileItemReader.setResource(new ClassPathResource("data/PS_Sample_log.csv"));
+        flatFileItemReader.setLinesToSkip(1);
+        flatFileItemReader.setLineMapper(lineMapper());
+        flatFileItemReader.setName("MMCSV-Reader");
+
+        return flatFileItemReader;
+    }
+
+    @Bean
+    public LineMapper<Transaction> lineMapper() {
+        DefaultLineMapper<Transaction> defaultLineMapper = new DefaultLineMapper<>();
+        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
+
+        lineTokenizer.setDelimiter(",");
+        lineTokenizer.setStrict(false);
+//TODO: See if this needs to be in the form of an object
+        lineTokenizer.setNames("step", "type", "amount", "nameOrig", "oldBalanceOrig", "newBalanceOrig", "nameDestination", "oldBalanceDestination", "newBlanaceDestination", "isFraud", "isFlaggedFraud");
+
+        BeanWrapperFieldSetMapper<Transaction> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        fieldSetMapper.setTargetType(Transaction.class);
+        fieldSetMapper.setDistanceLimit(0);
+
     }
 
 }
