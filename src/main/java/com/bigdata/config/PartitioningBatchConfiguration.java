@@ -2,14 +2,17 @@ package com.bigdata.config;
 
 
 import com.bigdata.batch.DBWriter;
+import com.bigdata.batch.JobCompletionNotificationListener;
 import com.bigdata.batch.Processor;
 import com.bigdata.model.Transaction;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.partition.support.MultiResourcePartitioner;
 import org.springframework.batch.core.partition.support.Partitioner;
 import org.springframework.batch.item.file.FlatFileItemReader;
@@ -142,6 +145,15 @@ public class PartitioningBatchConfiguration {
                 .processor(itemProcessor)
                 .writer(dbWriter)
                 .reader(itemReader)
+                .build();
+    }
+    @Bean
+    public Job job(JobCompletionNotificationListener listener) {
+        return jobBuilderFactory.get("MMTransaction-load")
+                .incrementer(new RunIdIncrementer())
+                .listener(listener)
+                .flow(masterStep())
+                .end()
                 .build();
     }
 
