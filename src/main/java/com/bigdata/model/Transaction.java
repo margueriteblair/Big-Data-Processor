@@ -1,5 +1,7 @@
 package com.bigdata.model;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.math.BigDecimal;
 
 public class Transaction {
@@ -32,5 +34,86 @@ public class Transaction {
         this.newBalanceDest = newBalanceDest;
         this.isFraud = isFraud;
         this.isFlaggedFraud = isFlaggedFraud;
+    }
+
+
+    public Boolean getFlaggedFraud() {
+        return isFlaggedFraud;
+    }
+
+    public void setFlaggedFraud(Boolean flaggedFraud) {
+        isFlaggedFraud = flaggedFraud;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public String getNameOrig() {
+        return nameOrig;
+    }
+
+    public void setNameOrig(String nameOrig) {
+        this.nameOrig = nameOrig;
+    }
+
+    public BigDecimal getOldBalanceOrg() {
+        return oldBalanceOrg;
+    }
+
+    public void setOldBalanceOrg(BigDecimal oldBalanceOrg) {
+        this.oldBalanceOrg = oldBalanceOrg;
+    }
+
+    public BigDecimal getNewBalanceOrig() {
+        return newBalanceOrig;
+    }
+
+    public void setNewBalanceOrig(BigDecimal newBalanceOrig) {
+        this.newBalanceOrig = newBalanceOrig;
+    }
+
+    public BigDecimal getOldBalanceDest() {
+        return oldBalanceDest;
+    }
+
+    public void setOldBalanceDest(BigDecimal oldBalanceDest) {
+        this.oldBalanceDest = oldBalanceDest;
+    }
+
+    public BigDecimal getNewBalanceDest() {
+        return newBalanceDest;
+    }
+
+    public void setNewBalanceDest(BigDecimal newBalanceDest) {
+        this.newBalanceDest = newBalanceDest;
+    }
+
+    public Boolean getFraud() {
+        return isFraud;
+    }
+
+    public void setFraud(Boolean fraud) {
+        isFraud = fraud;
+    }
+
+    public String getNameDest() {
+        return nameDest;
+    }
+
+    public void setNameDest(String nameDest) {
+        this.nameDest = nameDest;
     }
 }
