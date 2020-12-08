@@ -2,9 +2,11 @@ package com.bigdata.config;
 
 import com.bigdata.model.Transaction;
 import com.bigdata.processor.TransactionProcessor;
+import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
@@ -32,7 +34,7 @@ public class CsvFileToDBConfig {
     //below here we start the reader writer and processor
 
     @Bean
-    ItemProcessor<Transaction, Transaction> csvTransactionProcessor() {
+    public ItemProcessor<Transaction, Transaction> csvTransactionProcessor() {
         return new TransactionProcessor();
     }
 
@@ -66,6 +68,16 @@ public class CsvFileToDBConfig {
                 .<Transaction, Transaction>chunk(1)
                 .reader(csvTransactionReader())
                 .writer(csvTransactionWriter())
+                .build();
+    }
+
+    @Bean
+    Job csvFileToDBJob(JobCompletionNotificationListener listener) {
+        return jobBuilderFactory.get("csvFileToDBJob")
+                .incrementer(new RunIdIncrementer())
+                .listener(listener)
+                .flow(csvFileToDBStep())
+                .end()
                 .build();
     }
 }
