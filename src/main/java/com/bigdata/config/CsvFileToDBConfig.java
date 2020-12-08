@@ -9,8 +9,9 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
-import org.springframework.batch.item.file.transform.LineTokenizer;
+import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.ClassPathResource;
@@ -36,15 +37,18 @@ public class CsvFileToDBConfig {
     }
 
     @Bean
-    public FlatFileItemReader<Transaction> csvTransactionReader() {
-        FlatFileItemReader<Transaction> reader = new FlatFileItemReader<>();
-        reader.setResource(new ClassPathResource("transactionscsv.csv"));
-        reader.setLineMapper(new DefaultLineMapper<Transaction>() {
-            @Override
-            public void setLineTokenizer(LineTokenizer tokenizer) {
-                super.setLineTokenizer(tokenizer);
-            }
-        }
+    public FlatFileItemReader<Transaction> csvTransactionReader(){
+        FlatFileItemReader<Transaction> reader = new FlatFileItemReader<Transaction>();
+        reader.setResource(new ClassPathResource("transactioncsv.csv"));
+        reader.setLineMapper(new DefaultLineMapper<Transaction>() {{
+            setLineTokenizer(new DelimitedLineTokenizer() {{
+                setNames(new String[] { "id", "title", "description" });
+            }});
+            setFieldSetMapper(new BeanWrapperFieldSetMapper<Transaction>() {{
+                setTargetType(Transaction.class);
+            }});
+        }});
+        return reader;
     }
 
     @Bean
