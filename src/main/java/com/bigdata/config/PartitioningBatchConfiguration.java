@@ -2,6 +2,7 @@ package com.bigdata.config;
 
 
 import com.bigdata.batch.DBWriter;
+import com.bigdata.batch.Processor;
 import com.bigdata.model.Transaction;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Step;
@@ -50,6 +51,9 @@ public class PartitioningBatchConfiguration {
 
     @Autowired
     private DBWriter dbWriter;
+
+    @Autowired
+    private Processor itemProcessor;
 
     @Autowired
     private FlatFileItemReader<Transaction> itemReader;
@@ -130,5 +134,16 @@ public class PartitioningBatchConfiguration {
                 .taskExecutor(taskExecutor())
                 .build();
     }
+
+    @Bean
+    public Step step1() {
+        return stepBuilderFactory.get("step1")
+                .<Transaction, Transaction>chunk(CHUNK)
+                .processor(itemProcessor)
+                .writer(dbWriter)
+                .reader(itemReader)
+                .build();
+    }
+
 
 }
