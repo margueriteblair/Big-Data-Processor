@@ -42,7 +42,7 @@ public class CsvFileToDBConfig {
         reader.setResource(new ClassPathResource("transactioncsv.csv"));
         reader.setLineMapper(new DefaultLineMapper<Transaction>() {{
             setLineTokenizer(new DelimitedLineTokenizer() {{
-                setNames(new String[] { "id", "title", "description" });
+                setNames(new String[] { "step", "type", "amount", "nameOrig", "oldBalanceOrg", "newBalanceOrg", "nameDest", "oldBalanceDest", "isFraud", "isFlaggedFraud"});
             }});
             setFieldSetMapper(new BeanWrapperFieldSetMapper<Transaction>() {{
                 setTargetType(Transaction.class);
