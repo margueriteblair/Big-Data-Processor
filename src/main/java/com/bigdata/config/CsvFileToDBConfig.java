@@ -2,6 +2,7 @@ package com.bigdata.config;
 
 import com.bigdata.model.Transaction;
 import com.bigdata.processor.TransactionProcessor;
+import com.bigdata.utils.JobCompletionNotificationListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
