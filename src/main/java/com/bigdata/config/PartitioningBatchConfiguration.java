@@ -11,6 +11,10 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.partition.support.MultiResourcePartitioner;
 import org.springframework.batch.core.partition.support.Partitioner;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.LineMapper;
+import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -62,6 +66,29 @@ public class PartitioningBatchConfiguration {
         partitioner.partition(GRID_SIZE);
 
         return partitioner;
+    }
+
+    @Bean
+    public LineMapper<Transaction> lineMapper() {
+
+        DefaultLineMapper<Transaction> defaultLineMapper = new DefaultLineMapper<>();
+        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
+
+        lineTokenizer.setDelimiter(",");
+        lineTokenizer.setStrict(false);
+
+        lineTokenizer.setNames(new String[] { "step", "type", "amount", "nameOrig",
+                "oldBalanceOrg", "newBalanceOrig", "nameDest", "oldBalanceDest",
+                "newBalanceDest", "isFraud", "isFlaggedFraud" });
+
+        BeanWrapperFieldSetMapper<Transaction> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        fieldSetMapper.setTargetType(Transaction.class);
+        fieldSetMapper.setDistanceLimit(0);
+
+        defaultLineMapper.setLineTokenizer(lineTokenizer);
+        defaultLineMapper.setFieldSetMapper(fieldSetMapper);
+
+        return defaultLineMapper;
     }
 
 }
