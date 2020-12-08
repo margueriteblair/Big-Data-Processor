@@ -16,9 +16,13 @@ import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
@@ -89,6 +93,21 @@ public class PartitioningBatchConfiguration {
         defaultLineMapper.setFieldSetMapper(fieldSetMapper);
 
         return defaultLineMapper;
+    }
+    @Bean
+    @StepScope
+    @Qualifier("itemReader")
+    @DependsOn("partitioner")
+    public FlatFileItemReader<Transaction> itemReader(@Value("#{stepExecutionContext['fileName']}") String filename) throws MalformedURLException {
+
+        FlatFileItemReader<Transaction> flatFileItemReader = new FlatFileItemReader<>();
+        flatFileItemReader.setResource(new UrlResource(filename));
+
+        flatFileItemReader.setName("MMCSV-Reader");
+//		flatFileItemReader.setLinesToSkip(1);
+        flatFileItemReader.setLineMapper(lineMapper());
+
+        return flatFileItemReader;
     }
 
 }
