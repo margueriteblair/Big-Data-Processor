@@ -4,6 +4,7 @@ package com.bigdata.config;
 import com.bigdata.batch.DBWriter;
 import com.bigdata.model.Transaction;
 import org.slf4j.LoggerFactory;
+import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
@@ -25,6 +26,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -108,6 +110,25 @@ public class PartitioningBatchConfiguration {
         flatFileItemReader.setLineMapper(lineMapper());
 
         return flatFileItemReader;
+    }
+    @Bean
+    public ThreadPoolTaskExecutor taskExecutor() {
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setMaxPoolSize(MAX_POOL);
+        taskExecutor.setCorePoolSize(POOL_SIZE);
+        taskExecutor.setQueueCapacity(QUEUE);
+        taskExecutor.afterPropertiesSet();
+        return taskExecutor;
+    }
+
+    @Bean
+    @Qualifier("masterStep")
+    public Step masterStep() {
+        return stepBuilderFactory.get("masterStep")
+                .partitioner("step1", partitioner())
+                .step(step1())
+                .taskExecutor(taskExecutor())
+                .build();
     }
 
 }
