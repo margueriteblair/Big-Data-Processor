@@ -29,7 +29,7 @@ public class TransactionProcessor implements ItemProcessor<Transaction, Transact
                     amount, nameOrig, oldBalanceOrg, newBalanceOrig, nameDest,
                     oldBalanceDest, newBalanceDest, isFraud, isFlaggedFraud);
 
-            log.info("Converting (" + ") into (" + transformedTransaction + ")");
+            log.info("Converting (" + transaction + ") into (" + transformedTransaction + ")");
 
             return transformedTransaction;
 

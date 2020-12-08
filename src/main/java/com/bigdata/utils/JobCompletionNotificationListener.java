@@ -32,7 +32,8 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
             List<Transaction> results = jdbcTemplate.query("SELECT * FROM transactions", new RowMapper<Transaction>() {
                 @Override
                 public Transaction mapRow(ResultSet resultSet, int i) throws SQLException {
-                    return new Transaction(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6))
+                    return new Transaction(resultSet.getInt(1), resultSet.getString(2), resultSet.getBigDecimal(3), resultSet.getString(4), resultSet.getBigDecimal(5), resultSet.getBigDecimal(6),
+                            resultSet.getString(7), resultSet.getBigDecimal(8), resultSet.getBigDecimal(9), resultSet.getBoolean(10), resultSet.getBoolean(11));
                 }
             });
 
