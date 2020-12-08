@@ -30,7 +30,7 @@ public class TransactionController {
     @Autowired
     Job job;
 
-    @GetMapping("/load")
+    @GetMapping("/launch")
     public ResponseEntity<?> load() {
         try {
             ChunkFile.readAndChunk();
