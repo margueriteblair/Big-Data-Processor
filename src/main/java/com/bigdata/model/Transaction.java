@@ -19,6 +19,7 @@ public class Transaction {
     private BigDecimal newBalanceDest;
     private Boolean isFraud;
     private Boolean isFlaggedFraud;
+    //this is a test
 
     public Transaction() {}
 
