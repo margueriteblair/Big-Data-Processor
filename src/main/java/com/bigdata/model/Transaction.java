@@ -20,26 +20,25 @@ public class Transaction {
     private String nameDest;
     private BigDecimal oldBalanceDest;
     private BigDecimal newBalanceDest;
-    private Boolean isFraud;
-    private Boolean isFlaggedFraud;
+    private int isFraud;
+    private int isFlaggedFraud;
     //this is a test
 
     public Transaction() {}
 
-    public Transaction(int step, String type, BigDecimal amount, String nameOrig, BigDecimal oldBalanceOrg, BigDecimal newBalanceOrig, String nameDest,
-                BigDecimal oldBalanceDest, BigDecimal newBalanceDest, Boolean isFraud, Boolean isFlaggedFraud
-    ) {
-        this.step = step;
-        this.type = type;
-        this.amount = amount;
-        this.nameOrig = nameOrig;
-        this.oldBalanceOrg = oldBalanceOrg;
-        this.newBalanceOrig = newBalanceOrig;
-        this.nameDest = nameDest;
-        this.oldBalanceDest = oldBalanceDest;
-        this.newBalanceDest = newBalanceDest;
-        this.isFraud = isFraud;
-        this.isFlaggedFraud = isFlaggedFraud;
+    public Transaction(String data) {
+        String[] txData = data.split(",");
+        this.step = Integer.parseInt(txData[0]);
+        this.type = txData[1];
+        this.amount = new BigDecimal(txData[2]);
+        this.nameOrig = txData[3];
+        this.oldBalanceOrg = new BigDecimal(txData[4]);
+        this.newBalanceOrig = new BigDecimal(txData[5]);
+        this.nameDest = txData[6];
+        this.oldBalanceDest = new BigDecimal(txData[7]);
+        this.newBalanceDest = new BigDecimal(txData[8]);
+        this.isFraud = Integer.parseInt(txData[9]);
+        this.isFlaggedFraud = Integer.parseInt(txData[10]);
     }
 
 
