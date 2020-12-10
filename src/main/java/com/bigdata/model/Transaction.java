@@ -42,13 +42,7 @@ public class Transaction {
     }
 
 
-    public Boolean getFlaggedFraud() {
-        return isFlaggedFraud;
-    }
 
-    public void setFlaggedFraud(Boolean flaggedFraud) {
-        isFlaggedFraud = flaggedFraud;
-    }
 
     public String getType() {
         return type;
@@ -104,14 +98,6 @@ public class Transaction {
 
     public void setNewBalanceDest(BigDecimal newBalanceDest) {
         this.newBalanceDest = newBalanceDest;
-    }
-
-    public Boolean getFraud() {
-        return isFraud;
-    }
-
-    public void setFraud(Boolean fraud) {
-        isFraud = fraud;
     }
 
     public String getNameDest() {
