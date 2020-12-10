@@ -2,8 +2,10 @@ package com.bigdata.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import javax.persistence.Entity;
 import java.math.BigDecimal;
 
+@Entity
 public class Transaction {
     //this is POJO that models the fields of a TX
     private int step;
