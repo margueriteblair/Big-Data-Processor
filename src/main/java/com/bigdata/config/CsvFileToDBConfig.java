@@ -58,7 +58,7 @@ public class CsvFileToDBConfig {
     public JdbcBatchItemWriter<Transaction> csvTransactionWriter() {
         JdbcBatchItemWriter<Transaction> csvTransactionWriter = new JdbcBatchItemWriter<>();
         csvTransactionWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
-        csvTransactionWriter.setSql("INSERT INTO animes (step, type, amount, nameOrig, oldBalanceOrg, newBalanceOrig, nameDest, oldBalanceDest, newBalanceDest, isFraud, isFlaggedFraud) VALUES (:step, :type, :amount, :nameOrig, :oldBalanceOrg, :newBalanceOrig, :nameDest, :oldBalanceDest, :newBalanceDest, :isFraud, :isFlaggedFraud)");
+        csvTransactionWriter.setSql("INSERT INTO transactions (step, type, amount, nameOrig, oldBalanceOrg, newBalanceOrig, nameDest, oldBalanceDest, newBalanceDest, isFraud, isFlaggedFraud) VALUES (:step, :type, :amount, :nameOrig, :oldBalanceOrg, :newBalanceOrig, :nameDest, :oldBalanceDest, :newBalanceDest, :isFraud, :isFlaggedFraud)");
         csvTransactionWriter.setDataSource(dataSource);
         return csvTransactionWriter;
     }
