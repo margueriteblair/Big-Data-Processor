@@ -3,11 +3,14 @@ package com.bigdata.model;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "transactions")
 public class Transaction {
     //this is POJO that models the fields of a TX
+    //could add in columns
     private int step;
     private String type;
     private BigDecimal amount;
