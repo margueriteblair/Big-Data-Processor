@@ -57,8 +57,8 @@ public class CsvFileToDBConfig {
     @Bean
     public JdbcBatchItemWriter<Transaction> csvTransactionWriter() {
         JdbcBatchItemWriter<Transaction> csvTransactionWriter = new JdbcBatchItemWriter<>();
-        csvTransactionWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<Transaction>());
-        csvTransactionWriter.setSql("INSERT INTO animes (id, title, description) VALUES (:id, :title, :description)");
+        csvTransactionWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
+        csvTransactionWriter.setSql("INSERT INTO animes (step, type, amount, nameOrig, oldBalanceOrg, newBalanceOrig, nameDest, oldBalanceDest, newBalanceDest, isFraud, isFlaggedFraud) VALUES (:step, :type, :amount, :nameOrig, :oldBalanceOrg, :newBalanceOrig, :nameDest, :oldBalanceDest, :newBalanceDest, :isFraud, :isFlaggedFraud)");
         csvTransactionWriter.setDataSource(dataSource);
         return csvTransactionWriter;
     }
