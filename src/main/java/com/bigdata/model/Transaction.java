@@ -1,6 +1,5 @@
 package com.bigdata.model;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -40,8 +39,6 @@ public class Transaction {
         this.isFraud = Integer.parseInt(txData[9]);
         this.isFlaggedFraud = Integer.parseInt(txData[10]);
     }
-
-
 
 
     public String getType() {
