@@ -1,9 +1,7 @@
 package com.bigdata.model;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
@@ -33,6 +31,9 @@ public class Transaction {
     private int isFraud;
     @Column(name="isFlaggedFraud")
     private int isFlaggedFraud;
+    @Id
+    @GeneratedValue
+    public Long id;
 
     public Transaction() {}
 
