@@ -1,6 +1,7 @@
 package com.bigdata.model;
 
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -10,16 +11,27 @@ import java.math.BigDecimal;
 public class Transaction {
     //this is POJO that models the fields of a TX
     //could add in columns
+    @Column(name="step")
     private int step;
+    @Column(name="type")
     private String type;
+    @Column(name="amount")
     private BigDecimal amount;
+    @Column(name="nameOrig")
     private String nameOrig;
+    @Column(name="oldBalanceOrg")
     private BigDecimal oldBalanceOrg;
+    @Column(name="newBalanceOrig")
     private BigDecimal newBalanceOrig;
+    @Column(name="nameDest")
     private String nameDest;
+    @Column(name="oldBalanceDest")
     private BigDecimal oldBalanceDest;
+    @Column(name="newBalanceDest")
     private BigDecimal newBalanceDest;
+    @Column(name="isFraud")
     private int isFraud;
+    @Column(name="isFlaggedFraud")
     private int isFlaggedFraud;
     //this is a test
 

@@ -14,7 +14,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("api/")
 public class TransactionController {
 
     @Autowired

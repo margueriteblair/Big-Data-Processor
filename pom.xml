@@ -62,11 +62,6 @@
 			<artifactId>spring-batch-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>com.bigdata</groupId>-->
-<!--			<artifactId>big-data-processor</artifactId>-->
-<!--			<version>0.0.1-SNAPSHOT</version>-->
-<!--		</dependency>-->
 	</dependencies>
 
 	<build>
