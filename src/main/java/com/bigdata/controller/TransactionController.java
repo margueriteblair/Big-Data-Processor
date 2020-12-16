@@ -5,6 +5,7 @@ import com.bigdata.model.Transaction;
 import com.bigdata.service.TransactionService;
 import org.hibernate.StatelessSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,5 +34,10 @@ public class TransactionController {
 
         transaction.commit();
         session.close();
+    }
+
+    @GetMapping("/test")
+    public String getTest() {
+        return "test called works";
     }
 }
