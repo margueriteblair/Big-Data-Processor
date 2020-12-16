@@ -15,21 +15,21 @@ public class Transaction {
     private String type;
     @Column(name="amount")
     private BigDecimal amount;
-    @Column(name="nameOrig")
+    @Column(name="nameorig")
     private String nameOrig;
-    @Column(name="oldBalanceOrg")
+    @Column(name="oldbalanceorg")
     private BigDecimal oldBalanceOrg;
-    @Column(name="newBalanceOrig")
+    @Column(name="newbalanceorig")
     private BigDecimal newBalanceOrig;
-    @Column(name="nameDest")
+    @Column(name="namedest")
     private String nameDest;
-    @Column(name="oldBalanceDest")
+    @Column(name="oldbalancedest")
     private BigDecimal oldBalanceDest;
-    @Column(name="newBalanceDest")
+    @Column(name="newbalancedest")
     private BigDecimal newBalanceDest;
-    @Column(name="isFraud")
+    @Column(name="isfraud")
     private int isFraud;
-    @Column(name="isFlaggedFraud")
+    @Column(name="isflaggedfraud")
     private int isFlaggedFraud;
     @Id
     @GeneratedValue
