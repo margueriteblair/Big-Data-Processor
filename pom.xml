@@ -23,7 +23,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-batch</artifactId>
 		</dependency>
-<!--		 https://mvnrepository.com/artifact/org.apache.commons/commons-lang3-->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
@@ -52,6 +51,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.batch</groupId>
