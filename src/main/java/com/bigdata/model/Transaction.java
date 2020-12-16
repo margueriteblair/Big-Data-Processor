@@ -33,7 +33,6 @@ public class Transaction {
     private int isFraud;
     @Column(name="isFlaggedFraud")
     private int isFlaggedFraud;
-    //this is a test
 
     public Transaction() {}
 
