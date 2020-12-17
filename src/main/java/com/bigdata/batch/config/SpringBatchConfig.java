@@ -46,7 +46,7 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
     public FlatFileItemReader<Transaction> itemReader() {
         //@Value("${file.path}") Resource resource
         FlatFileItemReader<Transaction> flatFileItemReader = new FlatFileItemReader<Transaction>();
-        flatFileItemReader.setResource(new FileSystemResource("/Users/margueriteblair/Desktop/anime.csv"));
+        flatFileItemReader.setResource(new FileSystemResource("/Users/margueriteblair/Desktop/PS_20174392719_1491204439457_log.csv"));
         flatFileItemReader.setName("CSV-Reader");
         flatFileItemReader.setLinesToSkip(1); //first line is the header so we can skip it!
         flatFileItemReader.setLineMapper(lineMapper());
