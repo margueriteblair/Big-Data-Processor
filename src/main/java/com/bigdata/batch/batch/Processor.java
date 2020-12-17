@@ -1,6 +1,7 @@
 package com.bigdata.batch.batch;
 
-import com.bigdata.parser.model.Transaction;
+
+import com.bigdata.batch.model.Transaction;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
 

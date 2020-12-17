@@ -1,5 +1,6 @@
 package com.bigdata.batch.batch;
 
+import com.bigdata.batch.repository.TransactionRepository;
 import com.bigdata.parser.model.Transaction;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
