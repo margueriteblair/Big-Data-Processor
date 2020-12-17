@@ -39,11 +39,17 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
                    ItemProcessor<Transaction, Transaction> itemProcessor,
                    ItemWriter<Transaction> itemWriter) {
 
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setCorePoolSize(10);
+        taskExecutor.setMaxPoolSize(10);
+        taskExecutor.afterPropertiesSet();
+
         Step step = stepBuilderFactory.get("ETL-file-load")
                 .<Transaction, Transaction>chunk(5000)
                 .reader(itemReader)
                 .processor(itemProcessor)
                 .writer(itemWriter)
+                .taskExecutor(taskExecutor)
                 .build();
 
         return jobBuilderFactory.get("ETL-Load")
@@ -87,33 +93,5 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
         return factoryBean.getObject();
     }
 
-    @Bean
-    public Step step1() {
 
-        JdbcBatchItemWriter<Transaction> writer = new JdbcBatchItemWriter<>();
-        ItemProcessor<Transaction, Transaction> itemProcessor = new ItemProcessor<>() {
-            @Override
-            public Transaction process(Transaction transaction) throws Exception {
-                return null;
-            }
-        };
-        ItemReader<Transaction> reader = new ItemReader<Transaction>() {
-            @Override
-            public Transaction read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-                return null;
-            }
-        };
-        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(10);
-        taskExecutor.setMaxPoolSize(10);
-        taskExecutor.afterPropertiesSet();//all for multithreading
-
-        return stepBuilderFactory.get("step1")
-                .<Transaction, Transaction> chunk(5000)
-                .reader(reader)
-                .processor(itemProcessor)
-                .writer(writer)
-                .taskExecutor(taskExecutor) //use for multithreading
-                .build();
-    }
 }
