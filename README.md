@@ -1,3 +1,1 @@
-# Big-Data-Processor
-Java batch processing used for importing a CSV file to PostgreSQL database.
-One of the microservices for my final project.
+Two minimum viable products that will import a ~6 million record .csv file into PostgresSQL. One method uses batch processing, the other uses sessions to loop through the data and insert it into the appropriate row/column.
