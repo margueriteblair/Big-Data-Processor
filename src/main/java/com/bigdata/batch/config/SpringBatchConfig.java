@@ -10,22 +10,27 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.*;
+import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 
 @Configuration
 @EnableBatchProcessing
 public class SpringBatchConfig extends DefaultBatchConfigurer {
+
+
+    @Autowired
+    public StepBuilderFactory stepBuilderFactory;
 
     @Bean
     public Job job(JobBuilderFactory jobBuilderFactory,
@@ -35,7 +40,7 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
                    ItemWriter<Transaction> itemWriter) {
 
         Step step = stepBuilderFactory.get("ETL-file-load")
-                .<Transaction, Transaction>chunk(100)
+                .<Transaction, Transaction>chunk(5000)
                 .reader(itemReader)
                 .processor(itemProcessor)
                 .writer(itemWriter)
@@ -80,5 +85,35 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
         MapJobRepositoryFactoryBean factoryBean = new MapJobRepositoryFactoryBean();
         factoryBean.afterPropertiesSet();
         return factoryBean.getObject();
+    }
+
+    @Bean
+    public Step step1() {
+
+        JdbcBatchItemWriter<Transaction> writer = new JdbcBatchItemWriter<>();
+        ItemProcessor<Transaction, Transaction> itemProcessor = new ItemProcessor<>() {
+            @Override
+            public Transaction process(Transaction transaction) throws Exception {
+                return null;
+            }
+        };
+        ItemReader<Transaction> reader = new ItemReader<Transaction>() {
+            @Override
+            public Transaction read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+                return null;
+            }
+        };
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setCorePoolSize(10);
+        taskExecutor.setMaxPoolSize(10);
+        taskExecutor.afterPropertiesSet();//all for multithreading
+
+        return stepBuilderFactory.get("step1")
+                .<Transaction, Transaction> chunk(5000)
+                .reader(reader)
+                .processor(itemProcessor)
+                .writer(writer)
+                .taskExecutor(taskExecutor) //use for multithreading
+                .build();
     }
 }
