@@ -46,10 +46,10 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
                    ItemProcessor<Transaction, Transaction> itemProcessor,
                    ItemWriter<Transaction> itemWriter) {
 
-//        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-//        taskExecutor.setCorePoolSize(10);
-//        taskExecutor.setMaxPoolSize(16);
-//        taskExecutor.afterPropertiesSet();
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setCorePoolSize(10);
+        taskExecutor.setMaxPoolSize(16);
+        taskExecutor.afterPropertiesSet();
 
 //        JdbcBatchItemWriter<Transaction> writer = new JdbcBatchItemWriter<>();
 
@@ -58,7 +58,7 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
                 .reader(itemReader)
                 .processor(itemProcessor)
                 .writer(itemWriter)
-//                .taskExecutor(taskExecutor)
+                .taskExecutor(taskExecutor)
                 .build();
 
         return jobBuilderFactory.get("ETL-Load")
