@@ -51,8 +51,10 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
 //        taskExecutor.setMaxPoolSize(16);
 //        taskExecutor.afterPropertiesSet();
 
+//        JdbcBatchItemWriter<Transaction> writer = new JdbcBatchItemWriter<>();
+
         Step step = stepBuilderFactory.get("ETL-file-load")
-                .<Transaction, Transaction>chunk(5000)
+                .<Transaction, Transaction>chunk(10000)
                 .reader(itemReader)
                 .processor(itemProcessor)
                 .writer(itemWriter)
@@ -100,14 +102,14 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
         return factoryBean.getObject();
     }
 
-    @Bean
-    public JdbcBatchItemWriter<Transaction> batchWriter(DataSource dataSource) {
-        return new JdbcBatchItemWriterBuilder<Transaction>()
-                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-                .sql("INSERT INTO transactions (step, type, amount, nameOrig, oldbalanceOrg, newbalanceOrig, nameDest, oldbalanceDest, newbalanceDest, isFraud, isFlaggedFraud) VALUES (:step, :type, :amount, :nameorig, :oldbalanceorg, :newbalanceorig, :namedest, :oldbalancedest, :newbalancedest, :isfraud, :isflaggedfraud)")
-                .dataSource(dataSource)
-                .build();
-    }
+//    @Bean
+//    public JdbcBatchItemWriter<Transaction> batchWriter(DataSource dataSource) {
+//        return new JdbcBatchItemWriterBuilder<Transaction>()
+//                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+//                .sql("INSERT INTO transactions (step, type, amount, nameOrig, oldbalanceOrg, newbalanceOrig, nameDest, oldbalanceDest, newbalanceDest, isFraud, isFlaggedFraud) VALUES (:step, :type, :amount, :nameorig, :oldbalanceorg, :newbalanceorig, :namedest, :oldbalancedest, :newbalancedest, :isfraud, :isflaggedfraud)")
+//                .dataSource(dataSource)
+//                .build();
+//    }
 
 //    @Bean
 //    public Step step1() {
