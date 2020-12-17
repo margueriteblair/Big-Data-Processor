@@ -1,4 +1,4 @@
-package com.bigdata;
+package com.bigdata.parser;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

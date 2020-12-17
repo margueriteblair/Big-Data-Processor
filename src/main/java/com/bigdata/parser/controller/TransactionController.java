@@ -1,8 +1,8 @@
-package com.bigdata.controller;
+package com.bigdata.parser.controller;
 
 
-import com.bigdata.model.Transaction;
-import com.bigdata.service.TransactionService;
+import com.bigdata.parser.model.Transaction;
+import com.bigdata.parser.service.TransactionService;
 import org.hibernate.StatelessSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

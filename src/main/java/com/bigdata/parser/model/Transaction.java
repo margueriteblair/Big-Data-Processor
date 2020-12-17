@@ -1,4 +1,4 @@
-package com.bigdata.model;
+package com.bigdata.parser.model;
 
 
 import javax.persistence.*;
