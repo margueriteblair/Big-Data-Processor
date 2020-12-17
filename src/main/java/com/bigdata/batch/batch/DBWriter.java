@@ -16,7 +16,7 @@ public class DBWriter implements ItemWriter<Transaction> {
 
     @Override
     public void write(List<? extends Transaction> listOfTxs) throws Exception {
-        System.out.println("Data being saved for animes: " + listOfTxs);
+        System.out.println("Data being saved for transactions: " + listOfTxs);
         transactionRepository.saveAll(listOfTxs);
     }
 }
