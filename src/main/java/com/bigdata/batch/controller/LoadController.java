@@ -41,4 +41,9 @@ public class LoadController {
         }
         return jobExecution.getStatus();
     }
+
+    @GetMapping("/test")
+    public String testString() {
+        return "test worked!";
+    }
 }

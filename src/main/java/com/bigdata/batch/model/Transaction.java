@@ -123,4 +123,20 @@ public class Transaction {
     public void setStep(int step) {
         this.step = step;
     }
+
+    public int getIsFraud() {
+        return isFraud;
+    }
+
+    public void setIsFraud(int isFraud) {
+        this.isFraud = isFraud;
+    }
+
+    public int getIsFlaggedFraud() {
+        return isFlaggedFraud;
+    }
+
+    public void setIsFlaggedFraud(int isFlaggedFraud) {
+        this.isFlaggedFraud = isFlaggedFraud;
+    }
 }
