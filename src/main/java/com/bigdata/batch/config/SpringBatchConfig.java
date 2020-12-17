@@ -59,8 +59,8 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
 
         lineTokenizer.setDelimiter(",");
-        lineTokenizer.setStrict(true);
-        lineTokenizer.setNames("anime_id", "name", "genre", "type", "episodes", "ratings", "members");
+        lineTokenizer.setStrict(false);
+        lineTokenizer.setNames("step", "type", "amount", "nameorig", "oldbalanceorg", "newbalanceorig", "namedest", "oldbalancedest", "newbalancedest", "isfraud", "isflaggedfraud");
 
         BeanWrapperFieldSetMapper<Transaction> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
         fieldSetMapper.setTargetType(Transaction.class);
