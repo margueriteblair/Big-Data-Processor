@@ -40,25 +40,29 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
     public JobBuilderFactory jobBuilderFactory;
 
     @Bean
+    public ThreadPoolTaskExecutor taskExecutor(){
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setMaxPoolSize(20);
+        executor.setCorePoolSize(20);
+        executor.setQueueCapacity(10);
+        executor.afterPropertiesSet();
+        return executor;
+    }
+
+    @Bean
     public Job job(JobBuilderFactory jobBuilderFactory,
                    StepBuilderFactory stepBuilderFactory,
                    ItemReader<Transaction> itemReader,
                    ItemProcessor<Transaction, Transaction> itemProcessor,
                    ItemWriter<Transaction> itemWriter) {
 
-        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(10);
-        taskExecutor.setMaxPoolSize(16);
-        taskExecutor.afterPropertiesSet();
-
-//        JdbcBatchItemWriter<Transaction> writer = new JdbcBatchItemWriter<>();
 
         Step step = stepBuilderFactory.get("ETL-file-load")
                 .<Transaction, Transaction>chunk(10000)
                 .reader(itemReader)
                 .processor(itemProcessor)
                 .writer(itemWriter)
-                .taskExecutor(taskExecutor)
+                .taskExecutor(taskExecutor())
                 .build();
 
         return jobBuilderFactory.get("ETL-Load")
@@ -127,10 +131,6 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
 //                return null;
 //            }
 //        };
-//        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-//        taskExecutor.setCorePoolSize(10);
-//        taskExecutor.setMaxPoolSize(10);
-//        taskExecutor.afterPropertiesSet();//all for multithreading
 //
 //        return stepBuilderFactory.get("step1")
 //                .<Transaction, Transaction> chunk(5000)

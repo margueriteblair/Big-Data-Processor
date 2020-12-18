@@ -36,9 +36,7 @@ public class LoadController {
         );
 
         System.out.println("The batch is running!");
-        while (jobExecution.isRunning()) {
-            System.out.println("...");
-        }
+
         return jobExecution.getStatus();
     }
 
