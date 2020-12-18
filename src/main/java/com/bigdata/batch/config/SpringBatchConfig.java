@@ -11,9 +11,6 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.repository.support.MapJobRepositoryFactoryBean;
 import org.springframework.batch.item.*;
-import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
-import org.springframework.batch.item.database.JdbcBatchItemWriter;
-import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -22,6 +19,7 @@ import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -76,7 +74,7 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
     public FlatFileItemReader<Transaction> itemReader() {
         //@Value("${file.path}") Resource resource
         FlatFileItemReader<Transaction> flatFileItemReader = new FlatFileItemReader<Transaction>();
-        flatFileItemReader.setResource(new FileSystemResource("/Users/margueriteblair/Desktop/PS_20174392719_1491204439457_log.csv"));
+        flatFileItemReader.setResource(new ClassPathResource("/Users/margueriteblair/Desktop/PS_20174392719_1491204439457_log.csv"));
         flatFileItemReader.setName("CSV-Reader");
         flatFileItemReader.setLinesToSkip(1); //first line is the header so we can skip it!
         flatFileItemReader.setLineMapper(lineMapper());
@@ -90,10 +88,11 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
 
         lineTokenizer.setDelimiter(",");
         lineTokenizer.setStrict(false);
-        lineTokenizer.setNames("step", "type", "amount", "nameorig", "oldbalanceorg", "newbalanceorig", "namedest", "oldbalancedest", "newbalancedest", "isfraud", "isflaggedfraud");
+        lineTokenizer.setNames(new String[] {"step", "type", "amount", "nameorig", "oldbalanceorg", "newbalanceorig", "namedest", "oldbalancedest", "newbalancedest", "isfraud", "isflaggedfraud"});
 
         BeanWrapperFieldSetMapper<Transaction> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
         fieldSetMapper.setTargetType(Transaction.class);
+        fieldSetMapper.setDistanceLimit(0);
         defaultLineMapper.setLineTokenizer(lineTokenizer);
         defaultLineMapper.setFieldSetMapper(fieldSetMapper);
         return defaultLineMapper;
