@@ -8,28 +8,52 @@ import java.math.BigDecimal;
 public class Transaction {
     //this is POJO that models the fields of a TX
     //could add in columns
-    @Column(name="step")
-    private int step;
-    @Column(name="type")
+//    @Column(name="step")
+//    private int step;
+//    @Column(name="type")
+//    private String type;
+//    @Column(name="amount")
+//    private BigDecimal amount;
+//    @Column(name="nameorig")
+//    private String nameOrig;
+//    @Column(name="oldbalanceorg")
+//    private BigDecimal oldBalanceOrg;
+//    @Column(name="newbalanceorig")
+//    private BigDecimal newBalanceOrig;
+//    @Column(name="namedest")
+//    private String nameDest;
+//    @Column(name="oldbalancedest")
+//    private BigDecimal oldBalanceDest;
+//    @Column(name="newbalancedest")
+//    private BigDecimal newBalanceDest;
+//    @Column(name="isfraud")
+//    private int isFraud;
+//    @Column(name="isflaggedfraud")
+//    private int isFlaggedFraud;
+    private Integer step;
+
+    @Column(length = 10)
     private String type;
-    @Column(name="amount")
+
     private BigDecimal amount;
-    @Column(name="nameorig")
+
+    @Column(length = 32)
     private String nameOrig;
-    @Column(name="oldbalanceorg")
+
     private BigDecimal oldBalanceOrg;
-    @Column(name="newbalanceorig")
+
     private BigDecimal newBalanceOrig;
-    @Column(name="namedest")
+
+    @Column(length = 32)
     private String nameDest;
-    @Column(name="oldbalancedest")
+
     private BigDecimal oldBalanceDest;
-    @Column(name="newbalancedest")
+
     private BigDecimal newBalanceDest;
-    @Column(name="isfraud")
-    private int isFraud;
-    @Column(name="isflaggedfraud")
-    private int isFlaggedFraud;
+
+    private Integer isFraud;
+
+    private Integer isFlaggedFraud;
     @Id
     @GeneratedValue
     public Long id;

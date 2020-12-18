@@ -74,7 +74,7 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
     public FlatFileItemReader<Transaction> itemReader() {
         //@Value("${file.path}") Resource resource
         FlatFileItemReader<Transaction> flatFileItemReader = new FlatFileItemReader<Transaction>();
-        flatFileItemReader.setResource(new ClassPathResource("/Users/margueriteblair/Desktop/PS_20174392719_1491204439457_log.csv"));
+        flatFileItemReader.setResource(new FileSystemResource("/Users/margueriteblair/Desktop/PS_20174392719_1491204439457_log.csv"));
         flatFileItemReader.setName("CSV-Reader");
         flatFileItemReader.setLinesToSkip(1); //first line is the header so we can skip it!
         flatFileItemReader.setLineMapper(lineMapper());
@@ -87,8 +87,8 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
 
         lineTokenizer.setDelimiter(",");
-        lineTokenizer.setStrict(true);
-        lineTokenizer.setNames(new String[] {"step", "type", "amount", "nameorig", "oldbalanceorg", "newbalanceorig", "namedest", "oldbalancedest", "newbalancedest", "isfraud", "isflaggedfraud"});
+        lineTokenizer.setStrict(false);
+        lineTokenizer.setNames(new String[] {"step", "type", "amount", "nameOrig", "oldBalanceOrg", "newBalanceOrig", "nameDest", "oldBalanceDest", "newBalanceDest", "isFraud", "isFlaggedFraud"});
 
         BeanWrapperFieldSetMapper<Transaction> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
         fieldSetMapper.setTargetType(Transaction.class);
