@@ -15,6 +15,7 @@ import org.springframework.batch.core.partition.support.MultiResourcePartitioner
 import org.springframework.batch.core.partition.support.Partitioner;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -89,5 +90,15 @@ public class PartitionBatchConfig {
         taskExecutor.setQueueCapacity(10);
         taskExecutor.afterPropertiesSet();
         return taskExecutor;
+    }
+
+    @Bean
+    @Qualifier("masterStep")
+    public Step masterStep() {
+        return stepBuilderFactory.get("masterStep")
+                .partitioner("step1", partitioner())
+                .step(step1())
+                .taskExecutor(taskExecutor())
+                .build();
     }
 }
