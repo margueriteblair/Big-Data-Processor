@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -114,10 +115,10 @@ public class PartitionBatchConfig {
     @StepScope
     @Qualifier("itemReader")
     @DependsOn("partitioner")
-    public FlatFileItemReader<Transaction> itemReader(@Value("#{stepExecutionContext['fileName']}")String filename) throws MalformedURLException {
+    public FlatFileItemReader<Transaction> itemReader() {
         FlatFileItemReader<Transaction> flatFileItemReader = new FlatFileItemReader<>();
-        flatFileItemReader.setResource(new UrlResource(filename));
-        flatFileItemReader.setName("MMCSV-Reader");
+        flatFileItemReader.setResource(new FileSystemResource("/Users/margueriteblair/Desktop/PS_20174392719_1491204439457_log.csv"));
+        flatFileItemReader.setName("CSV-Reader");
         flatFileItemReader.setLinesToSkip(1);
         flatFileItemReader.setLineMapper(lineMapper());
         return flatFileItemReader;
