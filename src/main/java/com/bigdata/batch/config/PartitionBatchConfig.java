@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.io.IOException;
 
@@ -78,5 +79,15 @@ public class PartitionBatchConfig {
                 .writer(itemWriter)
                 .reader(itemReader)
                 .build();
+    }
+
+    @Bean
+    public ThreadPoolTaskExecutor taskExecutor() {
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setMaxPoolSize(16);
+        taskExecutor.setCorePoolSize(10);
+        taskExecutor.setQueueCapacity(10);
+        taskExecutor.afterPropertiesSet();
+        return taskExecutor;
     }
 }
