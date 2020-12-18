@@ -1,5 +1,7 @@
 package com.bigdata.batch.config;
 
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.launch.support.SimpleJobLauncher;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +11,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
 public class BatchJobConfig {
+
     @Autowired
     private JobRepository jobRepository;
 
@@ -31,4 +34,4 @@ public class BatchJobConfig {
         jobLauncher.setTaskExecutor(threadPoolTaskExecutor());
 
         return jobLauncher;
-    }
+    }}
