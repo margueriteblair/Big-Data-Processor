@@ -36,8 +36,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-@Configuration
-@EnableBatchProcessing
+//@Configuration
+//@EnableBatchProcessing
 public class PartitionBatchConfig {
     private static final Logger log = LoggerFactory.getLogger(PartitionBatchConfig.class);
 
