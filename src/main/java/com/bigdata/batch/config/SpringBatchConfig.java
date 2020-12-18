@@ -87,7 +87,7 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
 
         lineTokenizer.setDelimiter(",");
-        lineTokenizer.setStrict(false);
+        lineTokenizer.setStrict(true);
         lineTokenizer.setNames(new String[] {"step", "type", "amount", "nameorig", "oldbalanceorg", "newbalanceorig", "namedest", "oldbalancedest", "newbalancedest", "isfraud", "isflaggedfraud"});
 
         BeanWrapperFieldSetMapper<Transaction> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
@@ -105,38 +105,5 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
         return factoryBean.getObject();
     }
 
-//    @Bean
-//    public JdbcBatchItemWriter<Transaction> batchWriter(DataSource dataSource) {
-//        return new JdbcBatchItemWriterBuilder<Transaction>()
-//                .itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-//                .sql("INSERT INTO transactions (step, type, amount, nameOrig, oldbalanceOrg, newbalanceOrig, nameDest, oldbalanceDest, newbalanceDest, isFraud, isFlaggedFraud) VALUES (:step, :type, :amount, :nameorig, :oldbalanceorg, :newbalanceorig, :namedest, :oldbalancedest, :newbalancedest, :isfraud, :isflaggedfraud)")
-//                .dataSource(dataSource)
-//                .build();
-//    }
 
-//    @Bean
-//    public Step step1() {
-//
-//        JdbcBatchItemWriter<Transaction> writer = new JdbcBatchItemWriter<>();
-//        ItemProcessor<Transaction, Transaction> itemProcessor = new ItemProcessor<>() {
-//            @Override
-//            public Transaction process(Transaction transaction) throws Exception {
-//                return null;
-//            }
-//        };
-//        ItemReader<Transaction> reader = new ItemReader<Transaction>() {
-//            @Override
-//            public Transaction read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-//                return null;
-//            }
-//        };
-//
-//        return stepBuilderFactory.get("step1")
-//                .<Transaction, Transaction> chunk(5000)
-//                .reader(reader)
-//                .processor(itemProcessor)
-//                .writer(writer)
-//                .taskExecutor(taskExecutor) //use for multithreading
-//                .build();
-//    }
 }
