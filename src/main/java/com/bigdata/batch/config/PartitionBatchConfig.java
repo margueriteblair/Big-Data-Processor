@@ -14,15 +14,23 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.partition.support.MultiResourcePartitioner;
 import org.springframework.batch.core.partition.support.Partitioner;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.LineMapper;
+import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.item.file.mapping.DefaultLineMapper;
+import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 public class PartitionBatchConfig {
     private static final Logger log = LoggerFactory.getLogger(PartitionBatchConfig.class);
@@ -100,5 +108,40 @@ public class PartitionBatchConfig {
                 .step(step1())
                 .taskExecutor(taskExecutor())
                 .build();
+    }
+
+    @Bean
+    @StepScope
+    @Qualifier("itemReader")
+    @DependsOn("partitioner")
+    public FlatFileItemReader<Transaction> itemReader(@Value("#{stepExecutionContext['fileName']}")String filename) throws MalformedURLException {
+        FlatFileItemReader<Transaction> flatFileItemReader = new FlatFileItemReader<>();
+        flatFileItemReader.setResource(new UrlResource(filename));
+        flatFileItemReader.setName("MMCSV-Reader");
+        flatFileItemReader.setLinesToSkip(1);
+        flatFileItemReader.setLineMapper(lineMapper());
+        return flatFileItemReader;
+    }
+
+    @Bean
+    public LineMapper<Transaction> lineMapper() {
+        DefaultLineMapper<Transaction> defaultLineMapper = new DefaultLineMapper<>();
+        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
+
+        lineTokenizer.setDelimiter(",");
+        lineTokenizer.setStrict(false);
+
+        lineTokenizer.setNames(new String[] { "step", "type", "amount", "nameOrig",
+                "oldBalanceOrg", "newBalanceOrig", "nameDest", "oldBalanceDest",
+                "newBalanceDest", "isFraud", "isFlaggedFraud" });
+
+        BeanWrapperFieldSetMapper<Transaction> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
+        fieldSetMapper.setTargetType(Transaction.class);
+        fieldSetMapper.setDistanceLimit(0);
+
+        defaultLineMapper.setLineTokenizer(lineTokenizer);
+        defaultLineMapper.setFieldSetMapper(fieldSetMapper);
+
+        return defaultLineMapper;
     }
 }
