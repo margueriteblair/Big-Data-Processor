@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "transactions")
+//@Table(name = "transactions")
 public class Transaction {
     //this is POJO that models the fields of a TX
     //could add in columns
@@ -54,18 +54,18 @@ public class Transaction {
 public Transaction(Integer step, String type, BigDecimal amount, String nameOrig,
                    BigDecimal oldBalanceOrig, BigDecimal newBalanceOrig, String nameDest, BigDecimal oldBalanceDest,
                    BigDecimal newBalanceDest, Integer isFraud, Integer isFlaggedFraud) {
-            super();
-            this.step = step;
-            this.type = type;
-            this.amount = amount;
-            this.nameOrig = nameOrig;
-            this.oldBalanceOrg = oldBalanceOrig;
-            this.newBalanceOrig = newBalanceOrig;
-            this.nameDest = nameDest;
-            this.oldBalanceDest = oldBalanceDest;
-            this.newBalanceDest = newBalanceDest;
-            this.isFraud = isFraud;
-            this.isFlaggedFraud = isFlaggedFraud;
+                super();
+                this.step = step;
+                this.type = type;
+                this.amount = amount;
+                this.nameOrig = nameOrig;
+                this.oldBalanceOrg = oldBalanceOrig;
+                this.newBalanceOrig = newBalanceOrig;
+                this.nameDest = nameDest;
+                this.oldBalanceDest = oldBalanceDest;
+                this.newBalanceDest = newBalanceDest;
+                this.isFraud = isFraud;
+                this.isFlaggedFraud = isFlaggedFraud;
 
 }
 

@@ -35,7 +35,7 @@ public class LoadController {
                 + jobExecution.getFailureExceptions() + jobExecution.getExitStatus()
         );
 
-        System.out.println("The batch is running!");
+        System.out.println("We are in the batch, boys.");
 
         return jobExecution.getStatus();
     }
