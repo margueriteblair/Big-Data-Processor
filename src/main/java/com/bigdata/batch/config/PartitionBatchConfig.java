@@ -36,8 +36,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-//@Configuration
-//@EnableBatchProcessing
+@Configuration
+@EnableBatchProcessing
 public class PartitionBatchConfig {
     private static final Logger log = LoggerFactory.getLogger(PartitionBatchConfig.class);
 
@@ -79,9 +79,10 @@ public class PartitionBatchConfig {
     }
 
     @Bean
-    public Job job() {
+    public Job job(JobCompletionNotificationListener listener) {
         return jobBuilderFactory.get("ETL-file-load")
                 .incrementer(new RunIdIncrementer())
+                .listener(listener)
                 .flow(masterStep())
                 .end()
                 .build();
@@ -121,9 +122,9 @@ public class PartitionBatchConfig {
     @StepScope
     @Qualifier("itemReader")
     @DependsOn("partitioner")
-    public FlatFileItemReader<Transaction> itemReader() {
+    public FlatFileItemReader<Transaction> itemReader((@Value("#{stepExecutionContext['fileName']}") String filename) throws MalformedURLException {
         FlatFileItemReader<Transaction> flatFileItemReader = new FlatFileItemReader<>();
-        flatFileItemReader.setResource(new FileSystemResource("/Users/margueriteblair/Desktop/PS_20174392719_1491204439457_log.csv"));
+        flatFileItemReader.setResource(new UrlResource(filename);
         flatFileItemReader.setName("CSV-Reader");
         flatFileItemReader.setLinesToSkip(1);
         flatFileItemReader.setLineMapper(lineMapper());
@@ -138,9 +139,9 @@ public class PartitionBatchConfig {
         lineTokenizer.setDelimiter(",");
         lineTokenizer.setStrict(false);
 
-        lineTokenizer.setNames(new String[] { "step", "type", "amount", "nameOrig",
+        lineTokenizer.setNames("step", "type", "amount", "nameOrig",
                 "oldBalanceOrg", "newBalanceOrig", "nameDest", "oldBalanceDest",
-                "newBalanceDest", "isFraud", "isFlaggedFraud" });
+                "newBalanceDest", "isFraud", "isFlaggedFraud");
 
         BeanWrapperFieldSetMapper<Transaction> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
         fieldSetMapper.setTargetType(Transaction.class);
