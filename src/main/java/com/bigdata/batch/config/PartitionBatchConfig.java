@@ -122,9 +122,9 @@ public class PartitionBatchConfig {
     @StepScope
     @Qualifier("itemReader")
     @DependsOn("partitioner")
-    public FlatFileItemReader<Transaction> itemReader((@Value("#{stepExecutionContext['fileName']}") String filename) throws MalformedURLException {
+    public FlatFileItemReader<Transaction> itemReader(@Value("#{stepExecutionContext['fileName']}") String filename) throws MalformedURLException {
         FlatFileItemReader<Transaction> flatFileItemReader = new FlatFileItemReader<>();
-        flatFileItemReader.setResource(new UrlResource(filename);
+        flatFileItemReader.setResource(new UrlResource(filename));
         flatFileItemReader.setName("CSV-Reader");
         flatFileItemReader.setLinesToSkip(1);
         flatFileItemReader.setLineMapper(lineMapper());
