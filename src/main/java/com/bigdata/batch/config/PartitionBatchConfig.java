@@ -36,6 +36,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+//https://www.baeldung.com/spring-batch-partitioner
+
 @Configuration
 @EnableBatchProcessing
 public class PartitionBatchConfig {
