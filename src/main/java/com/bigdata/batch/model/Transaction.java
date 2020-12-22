@@ -8,72 +8,66 @@ import java.math.BigDecimal;
 public class Transaction {
     //this is POJO that models the fields of a TX
     //could add in columns
-//    @Column(name="step")
-//    private int step;
-//    @Column(name="type")
-//    private String type;
-//    @Column(name="amount")
-//    private BigDecimal amount;
-//    @Column(name="nameorig")
-//    private String nameOrig;
-//    @Column(name="oldbalanceorg")
-//    private BigDecimal oldBalanceOrg;
-//    @Column(name="newbalanceorig")
-//    private BigDecimal newBalanceOrig;
-//    @Column(name="namedest")
-//    private String nameDest;
-//    @Column(name="oldbalancedest")
-//    private BigDecimal oldBalanceDest;
-//    @Column(name="newbalancedest")
-//    private BigDecimal newBalanceDest;
-//    @Column(name="isfraud")
-//    private int isFraud;
-//    @Column(name="isflaggedfraud")
-//    private int isFlaggedFraud;
+
+    @Column(name="step")
     private Integer step;
-
-    @Column(length = 10)
+    @Column(length = 10, name="type")
     private String type;
-
+    @Column(name="amount")
     private BigDecimal amount;
-
-    @Column(length = 32)
+    @Column(length = 32, name = "nameorig")
     private String nameOrig;
-
+    @Column(name="oldbalanceorg")
     private BigDecimal oldBalanceOrg;
-
+    @Column(name="newbalanceorig")
     private BigDecimal newBalanceOrig;
-
-    @Column(length = 32)
+    @Column(length = 32, name = "namedest")
     private String nameDest;
-
+    @Column(name="oldbalancedest")
     private BigDecimal oldBalanceDest;
-
+    @Column(name="newbalancedest")
     private BigDecimal newBalanceDest;
-
+    @Column(name="isfraud")
     private Integer isFraud;
-
+    @Column(name="isflaggedfraud")
     private Integer isFlaggedFraud;
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
     public Transaction() {}
 
-    public Transaction(String data) {
-        String[] txData = data.split(",");
-        this.step = Integer.parseInt(txData[0]);
-        this.type = txData[1];
-        this.amount = new BigDecimal(txData[2]);
-        this.nameOrig = txData[3];
-        this.oldBalanceOrg = new BigDecimal(txData[4]);
-        this.newBalanceOrig = new BigDecimal(txData[5]);
-        this.nameDest = txData[6];
-        this.oldBalanceDest = new BigDecimal(txData[7]);
-        this.newBalanceDest = new BigDecimal(txData[8]);
-        this.isFraud = Integer.parseInt(txData[9]);
-        this.isFlaggedFraud = Integer.parseInt(txData[10]);
-    }
+//    public Transaction(String data) {
+//        String[] txData = data.split(",");
+//        this.step = Integer.parseInt(txData[0]);
+//        this.type = txData[1];
+//        this.amount = new BigDecimal(txData[2]);
+//        this.nameOrig = txData[3];
+//        this.oldBalanceOrg = new BigDecimal(txData[4]);
+//        this.newBalanceOrig = new BigDecimal(txData[5]);
+//        this.nameDest = txData[6];
+//        this.oldBalanceDest = new BigDecimal(txData[7]);
+//        this.newBalanceDest = new BigDecimal(txData[8]);
+//        this.isFraud = Integer.parseInt(txData[9]);
+//        this.isFlaggedFraud = Integer.parseInt(txData[10]);
+//    }
+public Transaction(Integer step, String type, BigDecimal amount, String nameOrig,
+                   BigDecimal oldBalanceOrig, BigDecimal newBalanceOrig, String nameDest, BigDecimal oldBalanceDest,
+                   BigDecimal newBalanceDest, Integer isFraud, Integer isFlaggedFraud) {
+            super();
+            this.step = step;
+            this.type = type;
+            this.amount = amount;
+            this.nameOrig = nameOrig;
+            this.oldBalanceOrg = oldBalanceOrig;
+            this.newBalanceOrig = newBalanceOrig;
+            this.nameDest = nameDest;
+            this.oldBalanceDest = oldBalanceDest;
+            this.newBalanceDest = newBalanceDest;
+            this.isFraud = isFraud;
+            this.isFlaggedFraud = isFlaggedFraud;
+
+}
 
 
     public String getType() {
