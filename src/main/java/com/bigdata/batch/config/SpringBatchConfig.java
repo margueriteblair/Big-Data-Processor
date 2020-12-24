@@ -1,5 +1,7 @@
 package com.bigdata.batch.config;
 
+import com.bigdata.batch.batch.DBWriter;
+import com.bigdata.batch.batch.Processor;
 import com.bigdata.batch.model.Transaction;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -20,11 +22,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 
 @Configuration
 @EnableBatchProcessing
+@EnableAsync
 public class SpringBatchConfig extends DefaultBatchConfigurer {
 
 
@@ -33,6 +37,13 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
 
     @Autowired
     public JobBuilderFactory jobBuilderFactory;
+
+    @Autowired
+    public DBWriter writer;
+
+    @Autowired
+    public Processor processor;
+
 
     @Bean
     public ThreadPoolTaskExecutor taskExecutor(){
@@ -51,20 +62,23 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
                    ItemProcessor<Transaction, Transaction> itemProcessor,
                    ItemWriter<Transaction> itemWriter) {
 
-
-        Step step = stepBuilderFactory.get("ETL-file-load")
-                .<Transaction, Transaction>chunk(10000)
-                .reader(itemReader)
-                .processor(itemProcessor)
-                .writer(itemWriter)
-                .taskExecutor(taskExecutor())
-                .build();
-
         return jobBuilderFactory.get("ETL-Load")
                 .incrementer(new RunIdIncrementer())
-                .start(step)
+                .start(step1())
                 .build();
 
+    }
+
+    @Bean
+    public Step step1() {
+
+        return stepBuilderFactory.get("ETL-file-load")
+                .<Transaction, Transaction>chunk(10000)
+                .reader(itemReader())
+                .processor(processor)
+                .writer(writer)
+                .taskExecutor(taskExecutor())
+                .build();
     }
 
     @Bean
