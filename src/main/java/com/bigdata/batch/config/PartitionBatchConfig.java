@@ -38,8 +38,8 @@ import java.net.MalformedURLException;
 
 //https://www.baeldung.com/spring-batch-partitioner
 
-@Configuration
-@EnableBatchProcessing
+//@Configuration
+//@EnableBatchProcessing
 public class PartitionBatchConfig {
     private static final Logger log = LoggerFactory.getLogger(PartitionBatchConfig.class);
 

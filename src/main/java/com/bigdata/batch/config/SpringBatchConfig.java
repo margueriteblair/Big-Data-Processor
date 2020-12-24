@@ -24,8 +24,8 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 
-//@Configuration
-//@EnableBatchProcessing
+@Configuration
+@EnableBatchProcessing
 public class SpringBatchConfig extends DefaultBatchConfigurer {
 
 
