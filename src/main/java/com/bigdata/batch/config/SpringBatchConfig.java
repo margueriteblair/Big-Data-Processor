@@ -23,8 +23,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 @Configuration
@@ -48,34 +51,35 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
 
 
     @Bean
-    public ThreadPoolTaskExecutor taskExecutor(){
+    public TaskExecutor taskExecutor(){
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setMaxPoolSize(20);
         executor.setCorePoolSize(20);
         executor.setQueueCapacity(10);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
+        executor.setThreadNamePrefix("MultiThreaded-");
 //        executor.afterPropertiesSet();
         return executor;
     }
 
     @Bean
     public Job job() {
-
         return jobBuilderFactory.get("ETL-Load")
                 .incrementer(new RunIdIncrementer())
-                .start(step1())
+                .flow(step1())
+                .end()
                 .build();
 
     }
 
     @Bean
     public Step step1() {
-
         return stepBuilderFactory.get("ETL-file-load")
                 .<Transaction, Transaction>chunk(10000)
                 .reader(itemReader())
                 .processor(processor)
                 .writer(writer)
-//                .taskExecutor(taskExecutor())
+                .taskExecutor(taskExecutor())
                 .build();
     }
 
