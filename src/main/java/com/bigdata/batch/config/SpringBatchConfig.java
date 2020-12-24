@@ -19,7 +19,6 @@ import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -41,7 +40,7 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
         executor.setMaxPoolSize(20);
         executor.setCorePoolSize(20);
         executor.setQueueCapacity(10);
-        executor.afterPropertiesSet();
+//        executor.afterPropertiesSet();
         return executor;
     }
 
