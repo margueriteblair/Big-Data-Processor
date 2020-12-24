@@ -29,7 +29,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 @Configuration
 @EnableBatchProcessing
-public class SpringBatchConfig extends DefaultBatchConfigurer {
+public class SpringBatchConfig {
 
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
@@ -55,7 +55,7 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
         executor.setQueueCapacity(10);
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.setThreadNamePrefix("MultiThreaded-");
-//        executor.afterPropertiesSet();
+        executor.afterPropertiesSet();
         return executor;
     }
 
@@ -106,7 +106,4 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
         defaultLineMapper.setFieldSetMapper(fieldSetMapper);
         return defaultLineMapper;
     }
-
-
-
 }
