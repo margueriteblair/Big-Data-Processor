@@ -21,6 +21,7 @@ import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -31,18 +32,20 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync
 public class SpringBatchConfig extends DefaultBatchConfigurer {
 
+    @Autowired
+    private StepBuilderFactory stepBuilderFactory;
 
     @Autowired
-    public StepBuilderFactory stepBuilderFactory;
+    private JobBuilderFactory jobBuilderFactory;
 
     @Autowired
-    public JobBuilderFactory jobBuilderFactory;
+    private DBWriter writer;
 
     @Autowired
-    public DBWriter writer;
+    private Processor processor;
 
     @Autowired
-    public Processor processor;
+    private Environment env;
 
 
     @Bean
@@ -56,11 +59,7 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
     }
 
     @Bean
-    public Job job(JobBuilderFactory jobBuilderFactory,
-                   StepBuilderFactory stepBuilderFactory,
-                   ItemReader<Transaction> itemReader,
-                   ItemProcessor<Transaction, Transaction> itemProcessor,
-                   ItemWriter<Transaction> itemWriter) {
+    public Job job() {
 
         return jobBuilderFactory.get("ETL-Load")
                 .incrementer(new RunIdIncrementer())
@@ -77,7 +76,7 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
                 .reader(itemReader())
                 .processor(processor)
                 .writer(writer)
-                .taskExecutor(taskExecutor())
+//                .taskExecutor(taskExecutor())
                 .build();
     }
 
@@ -109,12 +108,6 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
         return defaultLineMapper;
     }
 
-    @Override
-    protected JobRepository createJobRepository() throws Exception {
-        MapJobRepositoryFactoryBean factoryBean = new MapJobRepositoryFactoryBean();
-        factoryBean.afterPropertiesSet();
-        return factoryBean.getObject();
-    }
 
 
 }
