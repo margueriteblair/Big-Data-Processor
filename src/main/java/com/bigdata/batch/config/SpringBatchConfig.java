@@ -29,7 +29,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
 @EnableBatchProcessing
-@EnableAsync
 public class SpringBatchConfig extends DefaultBatchConfigurer {
 
     @Autowired
@@ -97,7 +96,7 @@ public class SpringBatchConfig extends DefaultBatchConfigurer {
 
         lineTokenizer.setDelimiter(",");
         lineTokenizer.setStrict(false);
-        lineTokenizer.setNames(new String[] {"step", "type", "amount", "nameOrig", "oldBalanceOrg", "newBalanceOrig", "nameDest", "oldBalanceDest", "newBalanceDest", "isFraud", "isFlaggedFraud"});
+        lineTokenizer.setNames("step", "type", "amount", "nameOrig", "oldBalanceOrg", "newBalanceOrig", "nameDest", "oldBalanceDest", "newBalanceDest", "isFraud", "isFlaggedFraud");
 
         BeanWrapperFieldSetMapper<Transaction> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
         fieldSetMapper.setTargetType(Transaction.class);
