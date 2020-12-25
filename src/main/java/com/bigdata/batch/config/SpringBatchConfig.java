@@ -5,30 +5,25 @@ import com.bigdata.batch.batch.Processor;
 import com.bigdata.batch.model.Transaction;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.*;
+import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.partition.support.MultiResourcePartitioner;
-import org.springframework.batch.core.partition.support.Partitioner;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.io.IOException;
 import java.util.concurrent.ThreadPoolExecutor;
 
 
@@ -64,25 +59,6 @@ public class SpringBatchConfig {
         return executor;
     }
 
-    @Bean("partitioner")
-    @StepScope
-    public Partitioner partitioner() {
-
-        MultiResourcePartitioner partitioner = new MultiResourcePartitioner();
-        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-
-        Resource[] resources = null;
-        try {
-            resources = resolver.getResources("file:" + "*.csv");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        partitioner.setResources(resources);
-        partitioner.partition(4);
-
-        return partitioner;
-    }
-
     @Bean
     public Job job() {
         return jobBuilderFactory.get("ETL-Load")
@@ -100,24 +76,11 @@ public class SpringBatchConfig {
                 .reader(itemReader())
                 .processor(processor)
                 .writer(writer)
-//                .taskExecutor(taskExecutor())
-                .build();
-    }
-
-    @Bean
-    @Qualifier("masterStep")
-    public Step masterStep() {
-        return stepBuilderFactory.get("masterStep")
-                .partitioner("ETL-file-load", partitioner())
-                .step(step1())
                 .taskExecutor(taskExecutor())
                 .build();
     }
 
     @Bean
-    @StepScope
-    @Qualifier("itemReader")
-    @DependsOn("partitioner")
     public FlatFileItemReader<Transaction> itemReader() {
         FlatFileItemReader<Transaction> flatFileItemReader = new FlatFileItemReader<Transaction>();
         flatFileItemReader.setResource(new FileSystemResource(env.getProperty("file.path")));
