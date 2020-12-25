@@ -15,8 +15,10 @@ import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -98,11 +100,24 @@ public class SpringBatchConfig {
                 .reader(itemReader())
                 .processor(processor)
                 .writer(writer)
+//                .taskExecutor(taskExecutor())
+                .build();
+    }
+
+    @Bean
+    @Qualifier("masterStep")
+    public Step masterStep() {
+        return stepBuilderFactory.get("masterStep")
+                .partitioner("ETL-file-load", partitioner())
+                .step(step1())
                 .taskExecutor(taskExecutor())
                 .build();
     }
 
     @Bean
+    @StepScope
+    @Qualifier("itemReader")
+    @DependsOn("partitioner")
     public FlatFileItemReader<Transaction> itemReader() {
         FlatFileItemReader<Transaction> flatFileItemReader = new FlatFileItemReader<Transaction>();
         flatFileItemReader.setResource(new FileSystemResource(env.getProperty("file.path")));
