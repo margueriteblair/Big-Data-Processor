@@ -10,6 +10,5 @@ public class Main {
         SpringApplication.run(com.bigdata.batch.Main.class, args);
     }
 //    resources list:
-    //test push for git clone
 //    https://medium.com/@ChamithKodikara/spring-batch-processing-example-8472d4646f60
 }
