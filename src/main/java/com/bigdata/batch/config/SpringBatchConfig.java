@@ -3,6 +3,8 @@ package com.bigdata.batch.config;
 import com.bigdata.batch.batch.DBWriter;
 import com.bigdata.batch.batch.Processor;
 import com.bigdata.batch.model.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -28,6 +30,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 @EnableBatchProcessing
 public class SpringBatchConfig {
+
+    private static final Logger log = LoggerFactory.getLogger(SpringBatchConfig.class);
 
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
