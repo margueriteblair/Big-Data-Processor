@@ -1,6 +1,7 @@
 package com.bigdata.batch.controller;
 
 
+import com.bigdata.batch.utils.ChunkBigFile;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -28,6 +29,7 @@ public class LoadController {
     @GetMapping
     public BatchStatus load() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, IOException {
 
+        ChunkBigFile.startSplit();
         Map<String, JobParameter> maps = new HashMap<>();
         maps.put("time", new JobParameter(System.currentTimeMillis()));
         JobParameters parameters = new JobParameters(maps);
@@ -37,7 +39,7 @@ public class LoadController {
                 + jobExecution.getFailureExceptions() + jobExecution.getExitStatus()
         );
 
-        System.out.println("We are in the batch, boys.");
+        System.out.println("We're done! Please check results");
 
         return jobExecution.getStatus();
     }

@@ -44,7 +44,7 @@ public class ChunkBigFile {
     }
 
     public static void writeSmallFile(String text, int fileCount) throws IOException {
-        String fileNameStart = "PS_Sample_log_Part_";
+        String fileNameStart = "PS_20174392719_1491204439457_log_Part_";
         String newFile = fileNameStart + fileCount + ".csv";
 
         File file = new File(newFile);
