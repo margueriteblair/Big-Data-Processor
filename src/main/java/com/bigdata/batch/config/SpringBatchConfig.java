@@ -20,22 +20,15 @@ import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.concurrent.ThreadPoolExecutor;
 
 
@@ -43,9 +36,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableBatchProcessing
 public class SpringBatchConfig {
 
-//    private static final Logger log = LoggerFactory.getLogger(SpringBatchConfig.class);
-    @Autowired
-    private FlatFileItemReader<Transaction> itemReader;
+    private static final Logger log = LoggerFactory.getLogger(SpringBatchConfig.class);
 
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
@@ -75,31 +66,12 @@ public class SpringBatchConfig {
         return executor;
     }
 
-    @Bean(name="partitioner")
-    @StepScope
-    public Partitioner partitioner() {
-//        log.info("In Partitioner");
-
-        MultiResourcePartitioner partitioner = new MultiResourcePartitioner();
-        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-
-        Resource[] resources = null;
-        try {
-            resources = resolver.getResources("file:" + "*.csv");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        partitioner.setResources(resources);
-        partitioner.partition(4);
-
-        return partitioner;
-    }
 
     @Bean
     public Job job() {
         return jobBuilderFactory.get("ETL-Load")
                 .incrementer(new RunIdIncrementer())
-                .flow(masterStep())
+                .flow(step1())
                 .end()
                 .build();
 
@@ -109,7 +81,7 @@ public class SpringBatchConfig {
     public Step step1() {
         return stepBuilderFactory.get("ETL-file-load")
                 .<Transaction, Transaction>chunk(10000)
-                .reader(itemReader)
+                .reader(itemReader())
                 .processor(processor)
                 .writer(writer)
                 .taskExecutor(taskExecutor())
@@ -117,29 +89,14 @@ public class SpringBatchConfig {
     }
 
     @Bean
-    @Qualifier("masterStep")
-    public Step masterStep() {
-        return stepBuilderFactory.get("masterStep")
-                .partitioner("step1", partitioner())
-                .step(step1())
-                .taskExecutor(taskExecutor())
-                .build();
-    }
-
-
-    @Bean
-    @StepScope
-    @Qualifier("itemReader")
-    @DependsOn("partitioner")
-    public FlatFileItemReader<Transaction> itemReader(@Value("#{stepExecutionContext[fileName]}") String filename) throws MalformedURLException {
+    public FlatFileItemReader<Transaction> itemReader() {
         FlatFileItemReader<Transaction> flatFileItemReader = new FlatFileItemReader<Transaction>();
-        flatFileItemReader.setResource(new UrlResource(filename));
+        flatFileItemReader.setResource(new FileSystemResource(env.getProperty("file.path")));
         flatFileItemReader.setName("CSV-Reader");
         flatFileItemReader.setLinesToSkip(1); //first line is the header so we can skip it!
         flatFileItemReader.setLineMapper(lineMapper());
         return flatFileItemReader;
     }
-    //https://www.baeldung.com/spring-batch-partitioner
 
     @Bean
     public LineMapper<Transaction> lineMapper() {
