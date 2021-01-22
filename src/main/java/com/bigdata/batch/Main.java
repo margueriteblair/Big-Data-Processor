@@ -9,6 +9,4 @@ public class Main {
     public static void main(String[] args) {
         SpringApplication.run(com.bigdata.batch.Main.class, args);
     }
-//    resources list:
-//    https://medium.com/@ChamithKodikara/spring-batch-processing-example-8472d4646f60
 }
