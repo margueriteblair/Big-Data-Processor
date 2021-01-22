@@ -1,7 +1,7 @@
 <h1>Large dataset processors</h1>
 
 <h2>This repo contains two minimum viable products that will import a 6 million record .csv file into PostgreSQL.
-  The first method I created to achieve this uses Stateless Sessions to stringify the data and loop through, while the second method uses Spring Batch processing. </h2>
+  The first method I created to achieve this uses Stateless Sessions to stringify the data and loop through the data file, while the second method uses Spring Batch processing. </h2>
 
 Average runtime for the batch processor with a ThreadPoolTaskExecutor is 10 minutes. Average runtime for the stateless sessions parser/processor is 40 minutes.
 Both of these methods will be improved upon in the future by incorporating a MultiResourcePartitioner within the Spring Batch Configuration file, as well as splitting the large dataset into smaller sets, so that multiple threads may operate on different files at a given time.
