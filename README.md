@@ -21,3 +21,4 @@ Both of these methods will be improved upon in the future by incorporating a Mul
 <li>Hibernate</li>
 <li>Java Persistence API (JPA)</li>
 <li>PostgreSQL</li>
+<li>Gateway Server Communication (Gateway Server can be found <a href="https://github.com/margueriteblair/Final-Microservices-Project/tree/main/gateway">here.</a></li>
