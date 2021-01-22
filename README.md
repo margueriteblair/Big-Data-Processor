@@ -1,6 +1,10 @@
-Two minimum viable products that will import a ~6 million record .csv file into PostgresSQL. One method uses batch processing, the other uses sessions to loop through the data and insert it into the appropriate row/column.
+<h1>Large dataset processors</h1>
+
+<h2>This repo contains two minimum viable products that will import a 6 million record .csv file into PostgreSQL.
+  The first method I created to achieve this uses Stateless Sessions to stringify the data and loop through, while the second method uses Spring Batch processing. </h2>
 
 Average runtime for the batch processor with a ThreadPoolTaskExecutor is 10 minutes. Average runtime for the stateless sessions parser/processor is 40 minutes.
+Both of these methods will be improved upon in the future by incorporating a MultiResourcePartitioner within the Spring Batch Configuration file, as well as splitting the large dataset into smaller sets, so that multiple threads may operate on different files at a given time.
 
 <h3>Instructions to run:</h3>
 <ol>1. Download the financial data from <a href="https://www.kaggle.com/ntnu-testimon/paysim1">Kaggle</a>. Add this data to "resource/data" and be sure to include the .csv file in your .gitignore!</ol>
