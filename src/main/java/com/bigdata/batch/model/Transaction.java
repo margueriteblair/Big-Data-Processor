@@ -37,21 +37,7 @@ public class Transaction {
 
     public Transaction() {}
 
-//    public Transaction(String data) {
-//        String[] txData = data.split(",");
-//        this.step = Integer.parseInt(txData[0]);
-//        this.type = txData[1];
-//        this.amount = new BigDecimal(txData[2]);
-//        this.nameOrig = txData[3];
-//        this.oldBalanceOrg = new BigDecimal(txData[4]);
-//        this.newBalanceOrig = new BigDecimal(txData[5]);
-//        this.nameDest = txData[6];
-//        this.oldBalanceDest = new BigDecimal(txData[7]);
-//        this.newBalanceDest = new BigDecimal(txData[8]);
-//        this.isFraud = Integer.parseInt(txData[9]);
-//        this.isFlaggedFraud = Integer.parseInt(txData[10]);
-//    }
-public Transaction(Integer step, String type, BigDecimal amount, String nameOrig,
+    public Transaction(Integer step, String type, BigDecimal amount, String nameOrig,
                    BigDecimal oldBalanceOrig, BigDecimal newBalanceOrig, String nameDest, BigDecimal oldBalanceDest,
                    BigDecimal newBalanceDest, Integer isFraud, Integer isFlaggedFraud) {
                 super();
