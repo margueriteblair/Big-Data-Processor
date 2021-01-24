@@ -14,20 +14,27 @@ import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.partition.support.MultiResourcePartitioner;
 import org.springframework.batch.core.partition.support.Partitioner;
+import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
+import org.springframework.batch.item.database.JdbcBatchItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
+import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -36,82 +43,71 @@ import java.util.concurrent.ThreadPoolExecutor;
 @EnableBatchProcessing
 public class SpringBatchConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(SpringBatchConfig.class);
-
-    @Autowired
-    private StepBuilderFactory stepBuilderFactory;
-
     @Autowired
     private JobBuilderFactory jobBuilderFactory;
 
     @Autowired
-    private DBWriter writer;
-
-    @Autowired
-    private Processor processor;
-
-    @Autowired
-    private Environment env;
-
+    private StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    public TaskExecutor taskExecutor(){
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setMaxPoolSize(20);
-        executor.setCorePoolSize(20);
-        executor.setQueueCapacity(10);
-        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
-        executor.setThreadNamePrefix("MultiThreaded-");
-        executor.afterPropertiesSet();
-        return executor;
+    @StepScope
+    public FlatFileItemReader<Transaction> fileTransactionReader(
+            @Value("#{jobParameters['inputFlatFile']}") Resource resource) {
+        return new FlatFileItemReaderBuilder<Transaction>()
+                .linesToSkip(1)
+                .name("transactionItemReader")
+                .resource(new ClassPathResource("/data/PS_20174392719_1491204439457_log.csv"))
+                .delimited()
+                .names(new String[] {"step", "type", "amount", "nameOrig", "oldBalanceOrg", "newBalanceOrig", "nameDest", "oldBalanceDest", "newBalanceDest", "isFraud", "isFlaggedFraud"})
+                .fieldSetMapper(fieldSet -> {
+                    Transaction transaction = new Transaction();
+                    transaction.setStep(fieldSet.readInt("step"));
+                    transaction.setType(fieldSet.readString("type"));
+                    transaction.setAmount(fieldSet.readBigDecimal("amount"));
+                    transaction.setNameOrig(fieldSet.readString("nameOrig"));
+                    transaction.setOldBalanceOrg(fieldSet.readBigDecimal("oldBalanceOrg"));
+                    transaction.setNewBalanceOrig(fieldSet.readBigDecimal("newBalanceOrig"));
+                    transaction.setNameDest(fieldSet.readString("nameDest"));
+                    transaction.setOldBalanceDest(fieldSet.readBigDecimal("oldBalanceDest"));
+                    transaction.setNewBalanceDest(fieldSet.readBigDecimal("newBalanceDest"));
+                    transaction.setIsFraud(fieldSet.readInt("isFraud"));
+                    transaction.setIsFlaggedFraud(fieldSet.readInt("isFlaggedFraud"));
+
+                    return transaction;
+                })
+                .build();
     }
 
+    @Bean
+    @StepScope
+    public JdbcBatchItemWriter<Transaction> writer(DataSource dataSource) {
+        JdbcBatchItemWriter<Transaction> writer = new JdbcBatchItemWriter<>();
+        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
+        writer.setSql("INSERT INTO TRANSACTION (step, type, amount, nameOrig, oldBalanceOrg, newBalanceOrig, nameDest, oldBalanceDest, newBalanceDest, isFraud, isFlaggedFraud) VALUES (:step, :type, :amount, :nameOrig, :oldBalanceOrg, :newBalanceOrig, :nameDest, :oldBalanceDest, :newBalanceDest, :isFraud, :isFlaggedFraud)");
+        writer.setDataSource(dataSource);
+        return writer;
+    }
 
     @Bean
-    public Job job() {
-        return jobBuilderFactory.get("ETL-Load")
-                .incrementer(new RunIdIncrementer())
-                .flow(step1())
-                .end()
+    public Job multithreadedJob() {
+        return this.jobBuilderFactory.get("multithreadedJob")
+                .start(step1())
                 .build();
-
     }
 
     @Bean
     public Step step1() {
-        return stepBuilderFactory.get("ETL-file-load")
-                .<Transaction, Transaction>chunk(10000)
-                .reader(itemReader())
-                .processor(processor)
-                .writer(writer)
-                .taskExecutor(taskExecutor())
+
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
+        taskExecutor.setCorePoolSize(4);
+        taskExecutor.setCorePoolSize(4);
+        taskExecutor.afterPropertiesSet();
+
+        return this.stepBuilderFactory.get("step1")
+                .<Transaction, Transaction>chunk(7500)
+                .reader(fileTransactionReader(null))
+                .writer(writer(null))
+                .taskExecutor(taskExecutor)
                 .build();
-    }
-
-    @Bean
-    public FlatFileItemReader<Transaction> itemReader() {
-        FlatFileItemReader<Transaction> flatFileItemReader = new FlatFileItemReader<Transaction>();
-        flatFileItemReader.setResource(new FileSystemResource(env.getProperty("file.path")));
-        flatFileItemReader.setName("CSV-Reader");
-        flatFileItemReader.setLinesToSkip(1); //first line is the header so we can skip it!
-        flatFileItemReader.setLineMapper(lineMapper());
-        return flatFileItemReader;
-    }
-
-    @Bean
-    public LineMapper<Transaction> lineMapper() {
-        DefaultLineMapper<Transaction> defaultLineMapper = new DefaultLineMapper<>();
-        DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-
-        lineTokenizer.setDelimiter(",");
-        lineTokenizer.setStrict(false);
-        lineTokenizer.setNames("step", "type", "amount", "nameOrig", "oldBalanceOrg", "newBalanceOrig", "nameDest", "oldBalanceDest", "newBalanceDest", "isFraud", "isFlaggedFraud");
-
-        BeanWrapperFieldSetMapper<Transaction> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
-        fieldSetMapper.setTargetType(Transaction.class);
-        fieldSetMapper.setDistanceLimit(0);
-        defaultLineMapper.setLineTokenizer(lineTokenizer);
-        defaultLineMapper.setFieldSetMapper(fieldSetMapper);
-        return defaultLineMapper;
     }
 }

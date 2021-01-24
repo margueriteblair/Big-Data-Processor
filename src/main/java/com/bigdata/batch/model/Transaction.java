@@ -4,10 +4,8 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-//@Table(name = "transactions")
 public class Transaction {
-    //this is POJO that models the fields of a TX
-    //could add in columns
+
 
     @Column(name="step")
     private Integer step;
