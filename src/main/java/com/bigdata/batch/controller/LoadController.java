@@ -29,7 +29,7 @@ public class LoadController {
     public BatchStatus load() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException, IOException {
 
         Map<String, JobParameter> maps = new HashMap<>();
-        maps.put("inputFlatFile", new JobParameter("src/main/resources/data/PS_20174392719_1491204439457_log.csv"));
+//        maps.put("inputFlatFile", new JobParameter("src/main/resources/data/PS_20174392719_1491204439457_log.csv"));
         maps.put("time", new JobParameter(System.currentTimeMillis()));
         JobParameters parameters = new JobParameters(maps);
         jobLauncher.run(job, parameters);

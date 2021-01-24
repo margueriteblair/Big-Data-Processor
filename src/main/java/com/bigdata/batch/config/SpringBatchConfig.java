@@ -104,7 +104,7 @@ public class SpringBatchConfig {
         taskExecutor.afterPropertiesSet();
 
         return this.stepBuilderFactory.get("step1")
-                .<Transaction, Transaction>chunk(7500)
+                .<Transaction, Transaction>chunk(8500)
                 .reader(fileTransactionReader(null))
                 .writer(writer(null))
                 .taskExecutor(taskExecutor)
