@@ -51,8 +51,7 @@ public class SpringBatchConfig {
 
     @Bean
     @StepScope
-    public FlatFileItemReader<Transaction> fileTransactionReader(
-            @Value("#{jobParameters['inputFlatFile']}") Resource resource) {
+    public FlatFileItemReader<Transaction> fileTransactionReader() {
         return new FlatFileItemReaderBuilder<Transaction>()
                 .linesToSkip(1)
                 .name("transactionItemReader")
@@ -104,8 +103,8 @@ public class SpringBatchConfig {
         taskExecutor.afterPropertiesSet();
 
         return this.stepBuilderFactory.get("step1")
-                .<Transaction, Transaction>chunk(8500)
-                .reader(fileTransactionReader(null))
+                .<Transaction, Transaction>chunk(10000)
+                .reader(fileTransactionReader())
                 .writer(writer(null))
                 .taskExecutor(taskExecutor)
                 .build();
