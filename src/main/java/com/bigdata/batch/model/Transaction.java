@@ -6,8 +6,6 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "transaction")
 public class Transaction {
-
-
     @Column(name="step")
     private Integer step;
     @Column(length = 10, name="type")
