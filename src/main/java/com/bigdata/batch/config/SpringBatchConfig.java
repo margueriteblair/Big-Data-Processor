@@ -50,7 +50,10 @@ public class SpringBatchConfig {
     private StepBuilderFactory stepBuilderFactory;
 
     @Bean
-    @StepScope
+    @StepScope //A spring batch StepScope object is one which is unique to a specific step
+    //as opposed to a singleton. The default bean scope in Spring is a singleton, but by specifying
+    //StepScope, spring batch will use the spring container to instantiate a new instance of this component for each step
+    //of execution.
     public FlatFileItemReader<Transaction> fileTransactionReader() {
         return new FlatFileItemReaderBuilder<Transaction>()
                 .linesToSkip(1)
@@ -96,7 +99,6 @@ public class SpringBatchConfig {
 
     @Bean
     public Step step1() {
-
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(4);
         taskExecutor.setCorePoolSize(4);
