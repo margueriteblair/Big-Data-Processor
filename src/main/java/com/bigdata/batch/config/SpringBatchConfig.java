@@ -53,13 +53,13 @@ public class SpringBatchConfig {
     @StepScope //A spring batch StepScope object is one which is unique to a specific step
     //as opposed to a singleton. The default bean scope in Spring is a singleton, but by specifying
     //StepScope, spring batch will use the spring container to instantiate a new instance of this component for each step
-    //of execution.
+    //of execution. This means we're instantiating a new filereader object for each step of the batch process
     public FlatFileItemReader<Transaction> fileTransactionReader() {
         return new FlatFileItemReaderBuilder<Transaction>()
-                .linesToSkip(1)
-                .name("transactionItemReader")
-                .resource(new ClassPathResource("/data/PS_20174392719_1491204439457_log.csv"))
-                .delimited()
+                .linesToSkip(1) //we skip the first line so as to not include the csv column headers
+                .name("transactionItemReader") //we name our reader
+                .resource(new FileSystemResource("/Users/margueriteblair/IdeaProjects/2021-01/Big-Data-Processor/src/main/resources/data/PS_20174392719_1491204439457_log.csv"))
+                .delimited() //by default, it's delimited by commas
                 .names(new String[] {"step", "type", "amount", "nameOrig", "oldBalanceOrg", "newBalanceOrig", "nameDest", "oldBalanceDest", "newBalanceDest", "isFraud", "isFlaggedFraud"})
                 .fieldSetMapper(fieldSet -> {
                     Transaction transaction = new Transaction();
@@ -81,7 +81,7 @@ public class SpringBatchConfig {
     }
 
     @Bean
-    @StepScope
+    @StepScope //our batch item writer is also step scope, meaning a new one is created for each step
     public JdbcBatchItemWriter<Transaction> writer(DataSource dataSource) {
         JdbcBatchItemWriter<Transaction> writer = new JdbcBatchItemWriter<>();
         writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
@@ -97,7 +97,7 @@ public class SpringBatchConfig {
                 .build();
     }
 
-    @Bean
+    @Bean //this is a single step job, we could potentially add more steps to the job if we wanted
     public Step step1() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(4);
