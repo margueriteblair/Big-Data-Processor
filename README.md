@@ -24,7 +24,7 @@ This project:
 <h3>Technologies Used</h3>
 <li>Java</li>
 <li>Spring Boot for REST API</li>
-<li>Spring Batch Processing</li>
+<li>Spring Batch Processing (Open Source Data Processing Framework)</li>
 <li>Maven</li>
 <li>Factory Design Pattern within Batch Processor</li>
 <li>Hibernate</li>
