@@ -58,11 +58,11 @@ public class SpringBatchConfig {
     //StepScope, spring batch will use the spring container to instantiate a new instance of this component for each step
     //of execution. This means we're instantiating a new filereader object for each step of the batch process
     public FlatFileItemReader<Transaction> fileTransactionReader() throws URISyntaxException {
-        URL resource = getClass().getClassLoader().getResource("PS_20174392719_1491204439457_log.csv");
+        String resource = getClass().getClassLoader().getResource("data/PS_20174392719_1491204439457_log.csv").getPath();
         return new FlatFileItemReaderBuilder<Transaction>()
                 .linesToSkip(1) //we skip the first line so as to not include the csv column headers
                 .name("transactionItemReader") //we name our reader
-                .resource((Resource) new File(resource.toURI()))
+                .resource(new FileSystemResource(resource))
                 .delimited() //by default, it's delimited by commas
                 .names(new String[] {"step", "type", "amount", "nameOrig", "oldBalanceOrg", "newBalanceOrig", "nameDest", "oldBalanceDest", "newBalanceDest", "isFraud", "isFlaggedFraud"})
                 .fieldSetMapper(fieldSet -> {
@@ -95,7 +95,7 @@ public class SpringBatchConfig {
     }
 
     @Bean
-    public Job multithreadedJob() {
+    public Job multithreadedJob() throws URISyntaxException {
         return this.jobBuilderFactory.get("multithreadedJob")
                 .start(step1())
                 .build();
