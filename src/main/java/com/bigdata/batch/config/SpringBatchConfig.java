@@ -35,7 +35,10 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.sql.DataSource;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.concurrent.ThreadPoolExecutor;
 
 
@@ -54,11 +57,12 @@ public class SpringBatchConfig {
     //as opposed to a singleton. The default bean scope in Spring is a singleton, but by specifying
     //StepScope, spring batch will use the spring container to instantiate a new instance of this component for each step
     //of execution. This means we're instantiating a new filereader object for each step of the batch process
-    public FlatFileItemReader<Transaction> fileTransactionReader() {
+    public FlatFileItemReader<Transaction> fileTransactionReader() throws URISyntaxException {
+        URL resource = getClass().getClassLoader().getResource("PS_20174392719_1491204439457_log.csv");
         return new FlatFileItemReaderBuilder<Transaction>()
                 .linesToSkip(1) //we skip the first line so as to not include the csv column headers
                 .name("transactionItemReader") //we name our reader
-                .resource(new FileSystemResource("/Users/margueriteblair/IdeaProjects/2021-01/Big-Data-Processor/src/main/resources/data/PS_20174392719_1491204439457_log.csv"))
+                .resource((Resource) new File(resource.toURI()))
                 .delimited() //by default, it's delimited by commas
                 .names(new String[] {"step", "type", "amount", "nameOrig", "oldBalanceOrg", "newBalanceOrig", "nameDest", "oldBalanceDest", "newBalanceDest", "isFraud", "isFlaggedFraud"})
                 .fieldSetMapper(fieldSet -> {
@@ -98,7 +102,7 @@ public class SpringBatchConfig {
     }
 
     @Bean //this is a single step job, we could potentially add more steps to the job if we wanted
-    public Step step1() {
+    public Step step1() throws URISyntaxException {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         taskExecutor.setCorePoolSize(4);
         taskExecutor.setCorePoolSize(4);
